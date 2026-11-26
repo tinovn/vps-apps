@@ -19,7 +19,7 @@ concurrency: image-${{ inputs.app }}
 
 jobs:
   build:
-    runs-on: [self-hosted, sv251, vps-apps-image]
+    runs-on: [self-hosted, vps-apps-image]  # gh-runner-vps-apps trên máy gh-runner-tinovn
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
