@@ -108,7 +108,8 @@ app_files() {
 
   local proxy="$APP_DIR/docker-proxy.mjs"
   if ! echo "$PROXY_SHA256  $proxy" | sha256sum -c --status 2>/dev/null; then
-    curl -fsSL "https://raw.githubusercontent.com/n8n-io/nod/$APP_REF/deployment/self-host/docker-proxy.mjs" -o "$proxy.tmp"
+    curl -fsSL --retry 3 --retry-all-errors -m 60 "https://raw.githubusercontent.com/n8n-io/nod/$APP_REF/deployment/self-host/docker-proxy.mjs" \
+      -o "$proxy.tmp" || die 'Không tải được docker-proxy.mjs của Nod từ GitHub.'
     echo "$PROXY_SHA256  $proxy.tmp" | sha256sum -c --status || die 'docker-proxy.mjs tải về sai sha256.'
     mv "$proxy.tmp" "$proxy"
   fi
@@ -293,9 +294,9 @@ wait_http() {
 # Không có tài khoản để tạo: kiểm token đang bắt buộc (không token → 401, Host lạ → 403) trước khi mở HTTPS.
 app_setup() {
   local code
-  code=$(curl -s -o /dev/null -w '%{http_code}' -H "Host: $TINO_HOST" "http://127.0.0.1:$APP_PORT/api/health")
+  code=$(curl -s -o /dev/null -m 10 -w '%{http_code}' -H "Host: $TINO_HOST" "http://127.0.0.1:$APP_PORT/api/health" || true)
   [ "$code" = 401 ] || die "Nod trả HTTP $code cho /api/health khi không có token (cần 401)."
-  code=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$APP_PORT/")
+  code=$(curl -s -o /dev/null -m 10 -w '%{http_code}' "http://127.0.0.1:$APP_PORT/" || true)
   [ "$code" = 403 ] || die "Nod trả HTTP $code cho Host 127.0.0.1 (cần 403)."
 }
 # --- hết phần riêng ---
