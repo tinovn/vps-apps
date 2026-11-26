@@ -1,0 +1,41 @@
+name: Build image
+
+# Chỉ chạy tay (người có quyền ghi repo). Không có trigger pull_request: code từ fork không chạy trên runner riêng.
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: Thư mục trong images/ (vd. nod)
+        required: true
+      ref:
+        description: Tag của dự án gốc (vd. nod-v0.9.7)
+        required: true
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency: image-${{ inputs.app }}
+
+jobs:
+  build:
+    runs-on: [self-hosted, sv251, vps-apps-image]
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Đăng nhập ghcr.io
+        env:
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: printf '%s' "$TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+      - name: Build và đẩy
+        env:
+          APP: ${{ inputs.app }}
+          REF: ${{ inputs.ref }}
+        run: |
+          [[ $APP =~ ^[a-z0-9-]+$ && -x images/$APP/build.sh ]] || { echo "không có images/$APP/build.sh"; exit 1; }
+          "images/$APP/build.sh" "$REF" | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Đăng xuất ghcr.io
+        if: always()
+        run: docker logout ghcr.io
