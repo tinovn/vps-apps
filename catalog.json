@@ -613,6 +613,20 @@
       "license": "Sustainable Use"
     },
     {
+      "slug": "nod",
+      "title": "Nod",
+      "repo": "n8n-io/nod",
+      "ref": "1128fcfd770d619f3391e0bd9f1ca2f9966f2be6",
+      "category": "ai",
+      "summary": "Trợ lý AI cá nhân của n8n có máy làm việc riêng, tự thao tác web, email, tài liệu và hỏi bạn trước khi làm việc quan trọng.",
+      "min_cpu": 2,
+      "min_ram_mb": 8192,
+      "min_disk_gb": 50,
+      "port": 4310,
+      "healthcheck": "/api/health",
+      "license": "Apache-2.0"
+    },
+    {
       "slug": "node-red",
       "title": "Node-RED",
       "repo": "node-red/node-red",
