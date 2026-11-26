@@ -86,9 +86,9 @@ wait_http() {
 }
 APP_VERSION=0.9.7
 # images/nod/build.sh nod-v0.9.7 → ghcr.io/tinovn; postgres, node ghim như compose.yaml của tag
-IMG_SERVER='ghcr.io/tinovn/nod-server:0.9.7@sha256:CHUA_BUILD'
-IMG_BROWSER='ghcr.io/tinovn/nod-browser:0.9.7@sha256:CHUA_BUILD'
-IMG_WORKSPACE='ghcr.io/tinovn/nod-workspace:0.9.7@sha256:CHUA_BUILD'
+IMG_SERVER='ghcr.io/tinovn/nod-server:0.9.7@sha256:f9d5c09352934e90666c67bcefcf15cdab2f86d65204f2a642b7b36936f26f21'
+IMG_BROWSER='ghcr.io/tinovn/nod-browser:0.9.7@sha256:c7cae1a2d407c3bff2b9e7d9ee07252841fe4f2bc1a5dcd7a5c0c83227894bca'
+IMG_WORKSPACE='ghcr.io/tinovn/nod-workspace:0.9.7@sha256:5694ba3f6fdce69e863eca3d64c0d1e59e44dac1cfe597f48b93e8568d05a036'
 IMG_POSTGRES='postgres:17-alpine@sha256:eee6c6e1b0894fa4fe0075eb054af9fd1cf39a35321c2d4110626cfe506411fb'
 IMG_NODE='node:24.21.0-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20'
 PROXY_SHA256='cb2be82c47e373fde31d2091a0d1acc1e2b57cf27d1ebdb3594820df87fffc41'  # deployment/self-host/docker-proxy.mjs
