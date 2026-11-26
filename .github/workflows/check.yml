@@ -1,0 +1,23 @@
+name: Kiểm danh mục
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    # Máy của GitHub, không dùng runner riêng: job này chạy cả pull request từ fork.
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Tệp sinh khớp nguồn
+        run: python3 -I tools/gen_catalog.py --check
+      - name: Test và shellcheck
+        run: python3 -I -m unittest discover -s tests -v
