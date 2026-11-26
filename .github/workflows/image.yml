@@ -1,6 +1,8 @@
 name: Build image
 
-# Chỉ chạy tay (người có quyền ghi repo). Không có trigger pull_request: code từ fork không chạy trên runner riêng.
+# Chỉ chạy tay (người có quyền ghi repo). Repo public + runner riêng: PR từ fork vẫn có thể sửa workflow để nhắm nhãn
+# vps-apps-image; chặn duy nhất là repo bắt duyệt tay mọi PR của người ngoài (all_external_contributors) —
+# đọc kỹ thay đổi .github/workflows/** trước khi bấm "Approve and run".
 on:
   workflow_dispatch:
     inputs:
@@ -30,6 +32,7 @@ jobs:
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: printf '%s' "$TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
       - name: Build và đẩy
+        shell: bash  # -eo pipefail: build lỗi thì bước đỏ dù có `| tee`
         env:
           APP: ${{ inputs.app }}
           REF: ${{ inputs.ref }}
