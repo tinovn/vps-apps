@@ -623,7 +623,7 @@
       "min_ram_mb": 8192,
       "min_disk_gb": 50,
       "port": 4310,
-      "healthcheck": "/api/health",
+      "healthcheck": "/",
       "license": "Apache-2.0"
     },
     {

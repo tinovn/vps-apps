@@ -191,12 +191,13 @@ volumes:
 YAML
 }
 
-# Server chỉ nhận Host trùng NOD_PUBLIC_URL (127.0.0.1 → 403) và /api/* cần token: chờ như healthcheck.mjs của Nod.
-# Định nghĩa lại wait_http của khung; token đi qua stdin (-K -), không lộ trên dòng lệnh.
+# Server chỉ nhận Host trùng NOD_PUBLIC_URL (127.0.0.1 → 403) và /api/* cần token: chờ /api/health như healthcheck.mjs của
+# Nod (kiểm cả PostgreSQL), bỏ qua đường APP_HEALTH ("/", dành cho bước tự kiểm của HostBill). Định nghĩa lại wait_http của
+# khung; token đi qua stdin (-K -), không lộ trên dòng lệnh.
 wait_http() {
   local end=$((SECONDS + $2))
   while [ "$SECONDS" -lt "$end" ]; do
-    case "$(curl -s -o /dev/null -m 10 -w '%{http_code}' -H "Host: $TINO_HOST" -K - "http://127.0.0.1:$APP_PORT$1" \
+    case "$(curl -s -o /dev/null -m 10 -w '%{http_code}' -H "Host: $TINO_HOST" -K - "http://127.0.0.1:$APP_PORT/api/health" \
       <<<"header = \"Authorization: Bearer $(envget NOD_AUTH_TOKEN)\"" || true)" in 2*) return 0 ;; esac
     sleep 3
   done

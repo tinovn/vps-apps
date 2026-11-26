@@ -12,7 +12,7 @@ metadata:
   min_disk_gb: 50
   os: ubuntu-24.04
   port: 4310
-  healthcheck: /api/health
+  healthcheck: /
   license: Apache-2.0
 ---
 
@@ -27,5 +27,7 @@ khung cấp HTTPS cho hostname VPS. Bí mật như `setup.sh` của họ: `NOD_A
 `[A-Za-z0-9_-]`), `NOD_VAULT_KEY` (`openssl rand -base64 32`).
 
 Server chỉ nhận Host trùng `NOD_PUBLIC_URL` (khác thì 403) và `/api/*` cần `Authorization: Bearer <NOD_AUTH_TOKEN>`
-(`src/server/access.ts`), nên `wait_http` gọi `/api/health` như `deployment/self-host/healthcheck.mjs`. Một server = một
+(`src/server/access.ts`). Script chờ `/api/health` kèm Host và token như `deployment/self-host/healthcheck.mjs`;
+`healthcheck` của danh mục là `/` (trang không cần token) cho bước tự kiểm của HostBill, bước này hỏi lại với Host công khai
+khi 127.0.0.1 bị 403 (OTE 26/11 job 11). Một server = một
 người; token là mật khẩu trong `/root/tino-app.txt`. Model (ChatGPT hoặc khoá API) khách tự kết nối trong Nod.
